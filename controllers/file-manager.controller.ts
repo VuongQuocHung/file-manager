@@ -13,7 +13,7 @@ export const uploadPost = (req: Request, res: Response) => {
 
     files.forEach(file => {
       const filename = `${Date.now()}-${file.originalname}`;
-      const filepath = path.join(mediaDir, file.originalname);
+      const filepath = path.join(mediaDir, filename);
       fs.writeFileSync(filepath, file.buffer);
       savedLinks.push({
         folder: "/media",
