@@ -86,3 +86,46 @@ export const changeFileNamePatch = (req: Request, res: Response) => {
     });
   }
 }
+
+export const deleteFilePatch = (req: Request, res: Response) => {
+  try {
+    const { fileName, folder } = req.body;
+
+    if(!folder || !fileName) {
+      res.json({
+        code: "error",
+        message: "Thiếu thông tin cần thiết!"
+      });
+      return;
+    }
+
+
+    // Tạo đường dẫn đến các file
+    const cleanFolder = folder.replace("/", ""); // loại bỏ dấu "/"
+    const mediaDir = path.join(__dirname, '..', cleanFolder);
+    const oldPath = path.join(mediaDir, fileName);
+
+    if(!fs.existsSync(oldPath)) {
+      res.json({
+        code: "error",
+        message: "File cũ không tồn tại!"
+      });
+      return;
+    }
+
+    // Xóa file
+    fs.unlinkSync(oldPath);
+
+
+    res.json({
+      code: "success",
+      message: "Thành công!"
+    });
+  } catch (error) {
+    console.log(error);
+    res.json({
+      code: "error",
+      message: "Lỗi server khi đổi tên file!"
+    });
+  }
+}
